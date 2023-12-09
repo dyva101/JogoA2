@@ -39,6 +39,12 @@ class Bat():
         screen = py.display.set_mode((self.width, self.height))
         py.display.set_caption("BAT: Uma Perigosa Jornada Universitária")
 
+        #Sonoplastia
+        py.mixer.init()
+        py.mixer.music.load("trilhaSonora.mp3")
+        py.mixer.music.play(-1)
+
+
         #Criando player
         fofo = char.Main_player(player_start_x, player_start_y , idle_1, SCREEN_WIDTH, SCREEN_HEIGHT, platform_group, GRAVITY)
 
@@ -66,7 +72,10 @@ class Bat():
             
             #Desenhando o jogador
             fofo.draw(screen)
-            
+        py.mixer.init()
+        py.mixer.music.load("deathSound.mp3")
+
+
             for event in py.event.get():
                 if event.type == py.QUIT:
                     game_on = False
