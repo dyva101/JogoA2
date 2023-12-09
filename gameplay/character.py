@@ -23,6 +23,7 @@ class MainPlayer(Character):
         self.height = SCREEN_HEIGHT
         self.platform_group = platform_group
         self.GRAVITY = GRAVITY
+        self.vel_y = 0
         self.isjumping = False
 
         #variáveis importantes para o player
@@ -31,7 +32,7 @@ class MainPlayer(Character):
         self.y_speed = 3
 
         #Sprites para animações
-        animation_list = []
+        """animation_list = []
         sprite_walking_right  = 
         for animation in range(5):
             image_animations_temp = []
@@ -54,7 +55,7 @@ class MainPlayer(Character):
             image_animations_temp = []
             image_animations_temp.append(pygame.image.load("assets/andando_pra_direita.png"))
             self.animation_list.append(pygame.transform.scale(animation, (80, 80)))   
-    
+        """
     
     
     
@@ -63,20 +64,29 @@ class MainPlayer(Character):
         pass
         
     def move(self):
+        dx = 0
+        dy = 0
         key = pygame.key.get_pressed()
         
         # Movimento lateral
         if (key[pygame.K_LEFT] or key[pygame.K_a]) and self.rect.left > 0:
             self.x -= self.lateral_speed
+            dx = -10 
             self.flip = True
         if (key[pygame.K_RIGHT] or key[pygame.K_d]) and self.rect.right + self.lateral_speed <= self.width:
             self.x += self.lateral_speed
+            dx = 10 
             self.flip = False
+
+        #gravity
+        self.vel_y += self.GRAVITY
+        dy += self.vel_y
 
         # Mecanismo de pulo
         if not self.isjumping and (key[pygame.K_UP] or key[pygame.K_w]):
             self.isjumping = True
             jump_fx.play() 
+            dx = -self.rect.left
             self.y_speed = -3
 
         # Aplicando gravidade e atualizando a posição vertical durante o pulo
@@ -84,7 +94,20 @@ class MainPlayer(Character):
             self.y += self.y_speed
             self.y_speed += self.GRAVITY
             print(self.y_speed)
+            dx = SCREEN_WIDTH - self.rect.right
             self.time_counting += 1
+
+        #check collision with ground 
+        if self.rect.bottom + dy > SCREEN_HEIGHT: 
+           dy = 0 
+           self.vel_y = -20  
+
+
+    
+
+        #update rectangle position 
+        self.rect.x += dx 
+        self.rect.y += dy   
             
         
         # Detecção de colisão
