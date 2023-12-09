@@ -23,7 +23,6 @@ class MainPlayer(Character):
         self.height = SCREEN_HEIGHT
         self.platform_group = platform_group
         self.GRAVITY = GRAVITY
-        self.vel_y = 0
         self.isjumping = False
 
         #variáveis importantes para o player
@@ -78,10 +77,6 @@ class MainPlayer(Character):
             dx = 10 
             self.flip = False
 
-        #gravity
-        self.vel_y += self.GRAVITY
-        dy += self.vel_y
-
         # Mecanismo de pulo
         if not self.isjumping and (key[pygame.K_UP] or key[pygame.K_w]):
             self.isjumping = True
@@ -97,10 +92,6 @@ class MainPlayer(Character):
             dx = SCREEN_WIDTH - self.rect.right
             self.time_counting += 1
 
-        #check collision with ground 
-        if self.rect.bottom + dy > SCREEN_HEIGHT: 
-           dy = 0 
-           self.vel_y = -20  
 
 
     
