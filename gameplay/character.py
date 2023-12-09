@@ -92,9 +92,15 @@ class MainPlayer(Character):
             dx = SCREEN_WIDTH - self.rect.right
             self.time_counting += 1
 
+        #check collision with platforms 
+        for platform in platform_group: 
+            #collision in the y direction
+            if platform.rect.colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
+                #check if above the platform 
+                if self.rect.bottom < platform.rect.centery:
+                    if self.y_speed > 0:
+                        self.y = platform.rect.top
 
-
-    
 
         #update rectangle position 
         self.rect.x += dx 
