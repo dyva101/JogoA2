@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Criação dos itens que formam o jogo &#8212; documentação BAT GAME 2023</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script src="_static/documentation_options.js?v=9f167875"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=000972dd"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Buscar" href="search.html" />
+    <link rel="next" title="Criação das telas do jogo" href="menu.html" />
+    <link rel="prev" title="Criação das entidades que formam o jogo" href="character.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p>Item
+===</p>
+<section id="criacao-dos-itens-que-formam-o-jogo">
+<h1>Criação dos itens que formam o jogo<a class="headerlink" href="#criacao-dos-itens-que-formam-o-jogo" title="Link to this heading">¶</a></h1>
+<p id="module-item">Criação dos itens que formam o jogo</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="item.Item">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">item.</span></span><span class="sig-name descname"><span class="pre">Item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SCREEN_WIDTH</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SCREEN_HEIGHT</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#item.Item" title="Link to this definition">¶</a></dt>
+<dd><p>Base: <code class="xref py py-class docutils literal notranslate"><span class="pre">Sprite</span></code></p>
+<p>Classe para representar um item no jogo</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>x (int): A coordenada x inicial do item.
+y (int): A coordenada y inicial do item.
+item_img (Surface): A imagem do item.
+SCREEN_WIDTH (int): A largura da tela do jogo.
+SCREEN_HEIGHT (int): A altura da tela do jogo.</p>
+</dd>
+<dt>Methods:</dt><dd><p>update: Identifica quando o sprite deve desaparecer
+apply_effect: aplica os efeitos do powerup</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="item.Item.apply_effect">
+<span class="sig-name descname"><span class="pre">apply_effect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#item.Item.apply_effect" title="Link to this definition">¶</a></dt>
+<dd><p>Aplica o efeito do item ao jogador.</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>player (MainPlayer): O jogador ao qual o efeito será aplicado.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="item.Item.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#item.Item.update" title="Link to this definition">¶</a></dt>
+<dd><p>Atualiza a posição do item e verifica se atingiu a parte inferior da tela para removê-lo.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">BAT GAME</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegação</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="BAT.html">BAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="character.html">Criação das entidades que formam o jogo</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Criação dos itens que formam o jogo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#item.Item"><code class="docutils literal notranslate"><span class="pre">Item</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="menu.html">Criação das telas do jogo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="platform.html">Tratamento das plataformas como sprites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scroll_background.html">Manutenção do rolamento do cenário</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sprites.html">Tratamento dos sprites para o jogo</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="character.html" title="capítulo anterior">Criação das entidades que formam o jogo</a></li>
+      <li>Next: <a href="menu.html" title="próximo capítulo">Criação das telas do jogo</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Busca rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Natalia, Isa, Joao, Otavio, Davy.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/item.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
