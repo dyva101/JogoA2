@@ -18,7 +18,7 @@ class Bat():
     def __init__(self, height, width):
         self.width = width
         self.height = height
-    
+            
     def start(self):
         py.init()
 
@@ -47,6 +47,8 @@ class Bat():
         py.mixer.init()
         py.mixer.music.load("assets\TrilhaSonora.mp3")
         py.mixer.music.play(-1)
+        jump_fx = py.mixer.Sound("assets\jumpland44100.mp3")
+        death_fx = py.mixer.Sound("assets\deathsound.mp3")
 
         #Carregando imagens necessárias
         player_idle = py.image.load("assets\calunio.png").convert_alpha()
@@ -55,6 +57,16 @@ class Bat():
         
         #Geração de Plataformas
         platform_group = py.sprite.Group()
+
+        def generate_new_platform(platform_group, SCREEN_WIDTH, SCREEN_HEIGHT, imagem_plataforma):
+            p_size = random.randint(70, 140)
+            p_x = random.randint(0, SCREEN_WIDTH - p_size)
+            p_y = 0
+
+            new_platform = plat.Plataforma(p_x, p_y, p_size, imagem_plataforma)
+            platform_group.add(new_platform)
+
+            return platform_group
 
         # Plataformas temporária
         for p in range(plat.max_plataformas):
@@ -94,8 +106,17 @@ class Bat():
             # Gerando Cenário
             BKGD = bg_gen.ScrollBackground(self.height, screen, scroll, 5, bkgd)
             scroll = BKGD.scroll_bkgd()
-            plat.draw(screen, platform_group)
             
+            for plataforma in platform_group:
+                plataforma.rect.y += 0.5
+
+            current_time = py.time.get_ticks()
+            if current_time - last_update >= 2500:
+                platform_group = generate_new_platform(platform_group, self.width, self.height, imagem_plataforma)
+                last_update = current_time
+
+            plat.draw(screen, platform_group)
+
             #Desenhando o jogador
             fofo.draw(screen)
 
