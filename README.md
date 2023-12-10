@@ -48,7 +48,7 @@
     ```
     git clone https://github.com/dyva101/JogoA2 #(log in to Github)
 
-    cd JogoA2 #unless you have a different path configured for the cloned repository
+    cd JogoA2 #A menos que você tenha outro caminho padrão
 
     pip install -r requirements.txt #successful installation
 
@@ -61,11 +61,11 @@
 
   > [!WARNING]
 
-    Apesar de tudo, nosso jogo ainda possui alguns bugs, como:
+  > Apesar de tudo, nosso jogo ainda possui alguns bugs, como:
 
-     1. O salto dele começa a ficar menor em altura, conforme ele dá mais pulos, por conta de uma ação indevida da gravidade. Suspeitamos que seja um buraco negro.
+  > 1. O salto dele começa a ficar menor em altura, conforme ele dá mais pulos, por conta de uma ação indevida da gravidade. Suspeitamos que seja um buraco negro.
         
-     2. O personagem, em algumas plataformas, parece flutuar. Mas quem nunca quis, não é mesmo?
+  > 2. O personagem, em algumas plataformas, parece flutuar. Mas quem nunca quis, não é mesmo?
 
 
 ---
