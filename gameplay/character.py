@@ -13,7 +13,11 @@ class Character(ABC):
     def __init__(self, x, y, img):
         self.x = x
         self.y = y
-        self.img = img      
+        self.img = img
+
+    @abstractmethod
+    def draw(self, screen):
+        pass      
 
 class MainPlayer(Character):
     def __init__(self, x, y, player_img, SCREEN_WIDTH, SCREEN_HEIGHT, platform_group, GRAVITY):
@@ -87,7 +91,6 @@ class MainPlayer(Character):
 
         flipped_image = py.transform.flip(self.imagem, self.flip, False)
         screen.blit(flipped_image, self.rect)
-        py.draw.rect(screen, (255, 0, 0), self.rect, 2)
     
     def update(self):
         pass
@@ -107,14 +110,20 @@ class Enemy(ABC):
         screen.blit(self.imagem, self.rect)
         py.draw.rect(screen, (255, 0, 0), self.rect, 2)
         
-class professor(Enemy):
+class Professor(Enemy, py.sprite.Sprite):
     def __init__(self, x, y, enemy_img):
+        py.sprite.Sprite.__init__(self)
         super().__init__(x, y, enemy_img)
-        self.speed = 5
-        self.health = 100
+        self.image = enemy_img
+    
+    def draw(self, screen):
+        super().draw(screen)
 
     def throw_evaluation(self):
         pass
     
     def throw_chalk(self):
         pass
+
+def draw(screen, group_de_inimigos):
+    group_de_inimigos.draw(screen)
