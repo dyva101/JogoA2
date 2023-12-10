@@ -1,4 +1,5 @@
 import pygame as py
+import random
 import character as char
 import scroll_background as bg_gen
 import platform as plat
@@ -6,6 +7,7 @@ import item
 import button as bt
 import options as opt
 import options_enum as opt_enum
+import sprites
 
 
 class Bat():
@@ -13,7 +15,7 @@ class Bat():
     Organização Principal do Jogo
     """
 
-    def __init__(self, width, height):
+    def __init__(self, height, width):
         self.width = width
         self.height = height
     
@@ -22,6 +24,8 @@ class Bat():
 
         #Variáveis
         current_time = py.time.get_ticks()
+        player_start_x = 0
+        player_start_y = 0
         SCREEEN_WIDTH = self.width
         SCREEN_HEIGHT = self.height
         last_update = py.time.get_ticks()
@@ -41,18 +45,40 @@ class Bat():
 
         #Sonoplastia
         py.mixer.init()
-        py.mixer.music.load("trilhaSonora.mp3")
+        py.mixer.music.load("assets\TrilhaSonora.mp3")
         py.mixer.music.play(-1)
 
+        #Carregando imagens necessárias
+        player_idle = py.image.load("assets\calunio.png").convert_alpha()
+        imagem_plataforma = py.image.load("assets\plataforma.png")
+        bkgd = py.image.load("assets\imagem_final.jpg").convert()
+        
+        #Geração de Plataformas
+        platform_group = py.sprite.Group()
+
+        # Plataformas temporária
+        for p in range(plat.max_plataformas):
+            p_2dp = random.randint(80, 150) 
+
+            if p%2 == 0:
+                p_x = random.randint(p_2dp, (self.width)/2 - p_2dp)
+            else:
+                p_x = random.randint(self.width/2 + p_2dp, self.width - p_2dp)
+            
+            p_y = p * random.randint(int(self.height/ plat.max_plataformas), int(self.height/plat.max_plataformas) + 10)
+            plataforma_1 = plat.Plataforma(p_x, p_y, p_2dp, imagem_plataforma)
+            platform_group.add(plataforma_1)
+            
+        # Plataforma Inicial
+        start_platform_x = 20
+        start_platform_y = self.height - 20
+        start_platform = plat.Plataforma(start_platform_x, start_platform_y, 80, imagem_plataforma)
+        platform_group.add(start_platform)
 
         #Criando player
-        fofo = char.Main_player(player_start_x, player_start_y , idle_1, SCREEN_WIDTH, SCREEN_HEIGHT, platform_group, GRAVITY)
-
-        #Carregando imagens necessárias
-        player_idle = py.image.load("imgs and songs/calunio.png").convert_alpha()
-        sprite_sheet = sp.SpriteSheet(player_idle)
-        imagem_plataforma = py.image.load("imgs and songs/2dplatform.png")
-        bkgd = py.image.load("imgs and songs/total_bkgd.png").convert()     
+        sprite_player = sprites.SpriteSheet()
+        sprite_player = sprite_player.get_image(player_idle, 2000, 1890, 0.4)
+        fofo = char.MainPlayer(player_start_x, player_start_y , sprite_player, self.width, self.height, platform_group, GRAVITY)
 
         #loop principal do jogo
         while game_on:
@@ -65,22 +91,16 @@ class Bat():
             else:
                 fofo.move()
 
-            # Gerando fundo e plataformas
-            new_scroll = bg_gen.scroll_bkgd(SCREEN_HEIGHT, screen, scroll, bkgd)
-            scroll = new_scroll
-            platform.draw(screen, platform_group)
+            # Gerando Cenário
+            BKGD = bg_gen.ScrollBackground(self.height, screen, scroll, 5, bkgd)
+            scroll = BKGD.scroll_bkgd()
+            plat.draw(screen, platform_group)
             
             #Desenhando o jogador
             fofo.draw(screen)
-        py.mixer.init()
-        py.mixer.music.load("deathSound.mp3")
-
 
             for event in py.event.get():
                 if event.type == py.QUIT:
                     game_on = False
 
             py.display.update()
-    
-    def finish():
-        pass

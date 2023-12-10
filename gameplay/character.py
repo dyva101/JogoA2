@@ -1,11 +1,12 @@
-import pygame
+import pygame as py
 import math
 import random
 from pygame.sprite import Group
 from abc import ABC, abstractmethod
 
-pygame.init()
-jump_fx = pygame.mixer.Sound("imgs and songs/jumpland44100.mp3")
+py.init()
+jump_fx = py.mixer.Sound("assets\jumpland44100.mp3")
+death_fx = py.mixer.Sound("assets\deathsound.mp3")
 
 class Character(ABC):
     def __init__(self, x, y, img):
@@ -16,7 +17,8 @@ class Character(ABC):
 class MainPlayer(Character):
     def __init__(self, x, y, player_img, SCREEN_WIDTH, SCREEN_HEIGHT, platform_group, GRAVITY):
         super().__init__(x, y, player_img)
-        self.imagem = pygame.transform.scale(self.player_img, (80, 80))
+        self.player_img = player_img
+        self.imagem = py.transform.scale(self.player_img, (80, 80))
         self.rect = self.imagem.get_rect()
         self.rect.center = (self.x, self.y)
         self.width = SCREEN_WIDTH
@@ -29,78 +31,25 @@ class MainPlayer(Character):
         self.flip = False
         self.lateral_speed = 10
         self.y_speed = 3
-
-        #Sprites para animações
-        """animation_list = []
-        sprite_walking_right  = 
-        for animation in range(5):
-            image_animations_temp = []
-            image_animations_temp.append(pygame.image.load("assets/andando_pra_direita.png"))
-            self.animation_list.append(pygame.transform.scale(animation, (80, 80)))
-        
-        for animation in range(5):
-            image_animations_temp = []
-            image_animations_temp.append(pygame.image.load("assets/andando_pra_direita.png"))
-            self.animation_list.append(pygame.transform.scale(animation, (80, 80)))  
-        for animation in range(5):
-            image_animations_temp = []
-            image_animations_temp.append(pygame.image.load("assets/andando_pra_direita.png"))
-            self.animation_list.append(pygame.transform.scale(animation, (80, 80)))
-        for animation in range(3):
-            image_animations_temp = []
-            image_animations_temp.append(pygame.image.load("assets/andando_pra_direita.png"))
-            self.animation_list.append(pygame.transform.scale(animation, (80, 80)))
-        for animation in range(4):
-            image_animations_temp = []
-            image_animations_temp.append(pygame.image.load("assets/andando_pra_direita.png"))
-            self.animation_list.append(pygame.transform.scale(animation, (80, 80)))   
-        """
-    
-    
-    
     
     def kill(self):
-        pass
+        death_fx.play()
         
     def move(self):
         dx = 0
         dy = 0
-        key = pygame.key.get_pressed()
+        key = py.key.get_pressed()
         
         # Movimento lateral
-        if (key[pygame.K_LEFT] or key[pygame.K_a]) and self.rect.left > 0:
-            self.x -= self.lateral_speed
-            dx = -10 
+        if (key[py.K_LEFT] or key[py.K_a]) and self.rect.left > 0:
+            dx -= self.lateral_speed
             self.flip = True
-        if (key[pygame.K_RIGHT] or key[pygame.K_d]) and self.rect.right + self.lateral_speed <= self.width:
-            self.x += self.lateral_speed
-            dx = 10 
+        if (key[py.K_RIGHT] or key[py.K_d]) and self.rect.right + self.lateral_speed <= self.width:
+            dx += self.lateral_speed
             self.flip = False
 
-        # Mecanismo de pulo
-        if not self.isjumping and (key[pygame.K_UP] or key[pygame.K_w]):
-            self.isjumping = True
-            jump_fx.play() 
-            dx = -self.rect.left
-            self.y_speed = -3
-
-        # Aplicando gravidade e atualizando a posição vertical durante o pulo
-        if self.isjumping:
-            self.y += self.y_speed
-            self.y_speed += self.GRAVITY
-            print(self.y_speed)
-            dx = SCREEN_WIDTH - self.rect.right
-            self.time_counting += 1
-
-        #check collision with platforms 
-        for platform in platform_group: 
-            #collision in the y direction
-            if platform.rect.colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
-                #check if above the platform 
-                if self.rect.bottom < platform.rect.centery:
-                    if self.y_speed > 0:
-                        self.y = platform.rect.top
-
+        self.y_speed += self.GRAVITY
+        dy += self.y_speed
 
         #update rectangle position 
         self.rect.x += dx 
@@ -109,7 +58,7 @@ class MainPlayer(Character):
         
         # Detecção de colisão
         for plataforma in self.platform_group:    
-            if pygame.sprite.collide_rect(self, plataforma) and self.y_speed >= 0:
+            if py.sprite.collide_rect(self, plataforma) and self.y_speed >= 0:
                 self.y = plataforma.rect.top
                 self.isjumping = False
                 self.y_speed = 0
@@ -121,18 +70,19 @@ class MainPlayer(Character):
 
     def draw(self, screen):
 
-        flipped_image = pygame.transform.flip(self.imagem, self.flip, False)
+        flipped_image = py.transform.flip(self.imagem, self.flip, False)
         screen.blit(flipped_image, self.rect)
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
+        py.draw.rect(screen, (255, 0, 0), self.rect, 2)
     
     def update(self):
+        pass
 
 class Enemy(ABC):
     def __init__(self, x, y, enemy_img):
         self.x = x
         self.y = y
         self.enemy_img = enemy_img
-        self.imagem = pygame.transform.scale(self.enemy_img, (100, 100))
+        self.imagem = py.transform.scale(self.enemy_img, (100, 100))
         self.rect = self.imagem.get_rect()
         self.rect.center = (self.x, self.y)
         self.speed = 10
@@ -140,7 +90,7 @@ class Enemy(ABC):
         
     def draw(self, screen):
         screen.blit(self.imagem, self.rect)
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
+        py.draw.rect(screen, (255, 0, 0), self.rect, 2)
         
 class professor(Enemy):
     def __init__(self, x, y, enemy_img):
