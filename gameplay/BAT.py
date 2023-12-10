@@ -1,18 +1,20 @@
+"""
+Organização do tratamento de eventos do Jogo
+"""
+
 import pygame as py
 import random
 import character as char
 import scroll_background as bg_gen
 import platform as plat
 import item
-import button as bt
-import options as opt
-import options_enum as opt_enum
 import sprites
+import menu
 
 
 class Bat:
     """
-    Organização Principal do Jogo
+    Classe principal do jogo.
     """
 
     def __init__(self, height, width):
@@ -31,7 +33,22 @@ class Bat:
         Método principal que inicia o jogo.
         """
         py.init()
+        screen = py.display.set_mode((self.width, self.height))
 
+        # Telas (Variáveis)
+        menu_image = py.image.load("assets\menu_image.png").convert_alpha()
+        title_image = py.image.load(r"assets\title.png").convert_alpha()
+        menu_image = py.transform.scale(menu_image, (self.width, self.height))
+        title_image = py.transform.scale(title_image, (self.width, 200))
+        you_won_image = py.image.load("assets\you_won.png").convert_alpha()
+        you_won_image = py.transform.scale(you_won_image, (self.width, 200))
+        FPS = 60
+        BLUE = (0, 0, 255)
+        WHITE = (255, 255, 255)
+
+        # Menu
+        menu.main_menu(screen, menu_image, title_image, FPS, self.width, self.height, WHITE, BLUE)
+        
         # Variáveis
         current_time = py.time.get_ticks()
         player_start_x = 0
@@ -51,20 +68,26 @@ class Bat:
         # Sonoplastia
         py.mixer.init()
         py.mixer.music.load("assets\\TrilhaSonora.mp3")
-        py.mixer.music.set_volume(0.7)
+        py.mixer.music.set_volume(0.3)
         py.mixer.music.play(-1)
         jump_fx = py.mixer.Sound("assets\\jumpland44100.mp3")
         death_fx = py.mixer.Sound("assets\\deathsound.mp3")
 
         #Carregando imagens necessárias
+        sprite_expresso = sprites.SpriteSheet()
+        imagem_expresso = sprite_expresso.get_image(py.image.load(r"assets\expresso.png").convert_alpha(), 1600, 1600, 0.09)
+        imagem_expresso = py.transform.scale(imagem_expresso, (30, 30))
         player_idle = py.image.load("assets\calunio.png").convert_alpha()
-        enemy_idle = py.image.load(r"assets\vilao.png").convert_alpha()
         imagem_plataforma = py.image.load("assets\plataforma.png")
         bkgd = py.image.load("assets\imagem_final.jpg").convert()
+        enemy_idle = py.image.load(r"assets\vilao.png").convert_alpha()
+        sprite_enemy = sprites.SpriteSheet()
+        sprite_enemy = sprite_enemy.get_image(enemy_idle, 1600, 1600, 0.09)
         
         #Geração de Plataformas
         platform_group = py.sprite.Group()
         group_de_inimigos = py.sprite.Group()
+        expresso_group = py.sprite.Group()
 
         def generate_new_platform(platform_group, SCREEN_WIDTH, SCREEN_HEIGHT, imagem_plataforma):
             """
@@ -90,6 +113,10 @@ class Bat:
 
             return platform_group
 
+        #Geração de Plataformas
+        platform_group = py.sprite.Group()
+        group_de_inimigos = py.sprite.Group()
+        
         # Plataformas temporárias
         for p in range(plat.max_plataformas):
             p_2dp = random.randint(80, 150)
@@ -119,11 +146,7 @@ class Bat:
         # Criando player
         sprite_player = sprites.SpriteSheet()
         sprite_player = sprite_player.get_image(player_idle, 2000, 1890, 0.4)
-        fofo = char.MainPlayer(player_start_x, player_start_y, sprite_player, self.width, self.height, platform_group, GRAVITY)
-
-        #Criando inimigo
-        sprite_enemy = sprites.SpriteSheet()
-        sprite_enemy = sprite_enemy.get_image(enemy_idle, 1600, 1600, 0.09)
+        fofo = char.MainPlayer(player_start_x, player_start_y, sprite_player, self.width, self.height, platform_group, GRAVITY)        
 
         #loop principal do jogo
         while game_on:
@@ -135,7 +158,7 @@ class Bat:
                 game_on = False
 
             else:
-                fofo.move()
+                fofo.move(group_de_inimigos, expresso_group)
 
             # Gerando Cenário
             BKGD = bg_gen.ScrollBackground(self.height, screen, scroll, 5, bkgd)
@@ -150,37 +173,45 @@ class Bat:
                 last_update = current_time
 
             plat.draw(screen, platform_group)
-            
+
+            #Criando inimigos
+            if len(group_de_inimigos) == 0:
+                enemy_x = random.randint(80, SCREEN_WIDTH - 80)
+                enemy_y = random.randint(80, SCREEN_HEIGHT - 80)
+                inimigo = char.Professor(enemy_x, enemy_y, sprite_enemy, SCREEN_WIDTH, SCREEN_HEIGHT)
+                group_de_inimigos.add(inimigo)
+
+            group_de_inimigos.update()
+                 
             #Atualizando inimigos
             for inimigo in group_de_inimigos:
                 inimigo.rect.y += 0.5
 
-            #Desenhando inimigos periodicamente
-            if current_time - last_update >= 1000:
-                altura_do_inimigo = 144
-                enemy_image = sprite_enemy
-                p = random.randint(0, len(platform_group) - 1)
-                for plataforma in platform_group:
-                    if p == 0:
-                        break
-                    p == 0
-                    # Ajuste as coordenadas y para posicionar os inimigos sobre as plataformas
-                    enemy_x = plataforma.rect.centerx  # Define a coordenada x igual ao centro da plataforma
-                    enemy_y = plataforma.rect.top - altura_do_inimigo  # Define a coordenada y acima da plataforma
-                    
-                    # Crie o inimigo usando as coordenadas definidas
-                    novo_inimigo = char.Professor(enemy_x, enemy_y, enemy_image)
-                    group_de_inimigos.add(novo_inimigo)
+            #Criando copinhos
+            if len(expresso_group) == 0:
+                expresso_x = random.randint(100, SCREEN_WIDTH - 100)
+                expresso_y = random.randint(100, SCREEN_HEIGHT - 100)
+                expresso = item.Item(expresso_x, expresso_y, imagem_expresso, SCREEN_WIDTH, SCREEN_HEIGHT)
+                expresso_group.add(expresso)
 
-                last_update = current_time
-
-            char.draw(screen, group_de_inimigos)
+            expresso_group.update()
+                 
+            #Atualizando copinhos
+            for expresso in expresso_group:
+                expresso.rect.y += 0.5
 
             #Desenhando o jogador
+            expresso_group.draw(screen)
+            group_de_inimigos.draw(screen)
             fofo.draw(screen)
 
             for event in py.event.get():
                 if event.type == py.QUIT:
                     game_on = False
+            
+            #YOU WON
+            if current_time >= 24000:
+                menu.you_won(screen, menu_image, you_won_image, FPS, self.width, self.height, WHITE, BLUE)
+                
 
             py.display.update()
