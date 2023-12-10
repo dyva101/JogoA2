@@ -1,3 +1,7 @@
+"""
+Criação das entidades que formam o jogo
+"""
+
 import pygame as py
 import math
 import random
@@ -16,16 +20,44 @@ CollectPowerup = py.mixer.Sound("assets\\CollectPowerup.mp3")
 
 class Character(ABC):
     def __init__(self, x, y, img):
+        """
+        Classe abstrata para representar um personagem no jogo.
+
+        Parameters:
+            x (int): A coordenada x inicial do personagem.
+            y (int): A coordenada y inicial do personagem.
+            img (Surface): A imagem do personagem.
+        """
         self.x = x
         self.y = y
         self.img = img
 
     @abstractmethod
     def draw(self, screen):
+        """
+        Método abstrato para desenhar o personagem na tela.
+
+        Parameters:
+            screen (Surface): A superfície onde o personagem será desenhado.
+        """
+
         pass      
 
 class MainPlayer(Character):
     def __init__(self, x, y, player_img, SCREEN_WIDTH, SCREEN_HEIGHT, platform_group, GRAVITY):
+        """
+        Classe para representar o personagem principal do jogo.
+
+        Parameters:
+            x (int): A coordenada x inicial do jogador.
+            y (int): A coordenada y inicial do jogador.
+            player_img (Surface): A imagem do jogador.
+            SCREEN_WIDTH (int): A largura da tela do jogo.
+            SCREEN_HEIGHT (int): A altura da tela do jogo.
+            platform_group (Group): Grupo de plataformas no jogo.
+            GRAVITY (float): A força de gravidade aplicada ao jogador.
+        """
+
         super().__init__(x, y, player_img)
         self.player_img = player_img
         self.imagem = py.transform.scale(self.player_img, (80, 80))
@@ -43,6 +75,12 @@ class MainPlayer(Character):
         self.y_speed = -3
     
     def kill(self, death_fx):
+        """
+        Método para lidar com a morte do jogador.
+
+        Parameters:
+            death_fx (Sound): O efeito sonoro de morte.
+        """
         py.mixer.music.set_volume(1)
         death_fx.play()
         py.time.delay(1000)
@@ -64,7 +102,13 @@ class MainPlayer(Character):
             
 
     def move(self, group_de_inimigos, expresso_group):
+        """
+        Método para lidar com o movimento do jogador.
 
+        Parameters:
+            group_de_inimigos (Group): Grupo de inimigos no jogo.
+            expresso_group (Group): Grupo de objetos Expresso no jogo.
+        """
         key = py.key.get_pressed()
         
         # Movimento lateral
@@ -120,15 +164,85 @@ class MainPlayer(Character):
 
         # Atualizando a posição do jogador
         self.rect.center = (self.x, self.y)
-    def draw(self, screen):
 
+    def draw(self, screen):
+        """
+        Método para desenhar o jogador na tela.
+
+        Paraemters:
+            screen (Surface): A superfície onde o jogador será desenhado.
+        """
         flipped_image = py.transform.flip(self.imagem, self.flip, False)
         screen.blit(flipped_image, self.rect)
     
     def update(self):
         pass
 
+#driver code para desenvolvimento da classe MainPlayer
+if __name__ == "main":
+    # Inicialização do Pygame
+    py.init()
+
+    # Definição de variáveis
+    SCREEN_WIDTH = 800
+    SCREEN_HEIGHT = 600
+    FPS = 60
+
+    # Configuração da tela
+    screen = py.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    py.display.set_caption("MainPlayer Test")
+
+    # Imagens e Sons
+    player_image = py.Surface((50, 50))  
+    death_sound = py.mixer.Sound("assets\deathsound.mp3")
+
+    # Criando instância do MainPlayer
+    main_player = MainPlayer(SCREEN_WIDTH // 2, 0, player_image, SCREEN_WIDTH, SCREEN_HEIGHT, [], 0.025)
+
+    clock = py.time.Clock()
+
+    # Loop principal
+    running = True
+    while running:
+        for event in py.event.get():
+            if event.type == QUIT:
+                running = False
+
+        # Atualizando o jogador
+        main_player.move([], [])  # Passando grupos vazios para evitar erros nos métodos de detecção de colisão
+        main_player.update()
+
+        # Desenhando na tela
+        screen.fill((255, 255, 255))  # Preenchendo o fundo com branco
+        main_player.draw(screen)
+
+        # Atualizando a tela
+        py.display.flip()
+
+        # Limitando a taxa de quadros
+        clock.tick(FPS)
+
+        # Verificando se o jogador atingiu o chão
+        if main_player.y >= SCREEN_HEIGHT:
+            main_player.kill(death_sound)
+            py.time.delay(2000)
+            running = False
+
+    # Finalizando o Pygame
+    py.quit()
+
+
 class Enemy(py.sprite.Sprite):  # Removendo a herança ABC e utilizando apenas Sprite
+    """
+    Classe para representar um inimigo no jogo.
+
+    Parameters:
+        x (int): A coordenada x inicial do inimigo.
+        y (int): A coordenada y inicial do inimigo.
+        enemy_img (Surface): A imagem do inimigo.
+        SCREEN_WIDTH (int): A largura da tela do jogo.
+        SCREEN_HEIGHT (int): A altura da tela do jogo.
+    """
     def __init__(self, x, y, enemy_img, SCREEN_WIDTH, SCREEN_HEIGHT):
         super().__init__()
         self.x = x
@@ -142,10 +256,26 @@ class Enemy(py.sprite.Sprite):  # Removendo a herança ABC e utilizando apenas S
         self.height = SCREEN_HEIGHT
     
     def draw(self, screen):
+        """
+        Desenha o inimigo na tela.
+
+        Parameters:
+            screen (Surface): A superfície onde o inimigo será desenhado.
+        """
         screen.blit(self.imagem, self.rect)
         py.draw.rect(screen, (255, 0, 0), self.rect, 2)
 
 class Professor(Enemy):
+    """
+    Classe para representar um professor (subclasse de Enemy) no jogo.
+
+    Parameters:
+        x (int): A coordenada x inicial do professor.
+        y (int): A coordenada y inicial do professor.
+        enemy_img (Surface): A imagem do professor.
+        SCREEN_WIDTH (int): A largura da tela do jogo.
+        SCREEN_HEIGHT (int): A altura da tela do jogo.
+    """
     def __init__(self, x, y, enemy_img, SCREEN_WIDTH, SCREEN_HEIGHT):
         super().__init__(x, y, enemy_img, SCREEN_WIDTH, SCREEN_HEIGHT)
         enemy_idle = py.image.load(r"assets\vilao.png").convert_alpha()
@@ -155,11 +285,53 @@ class Professor(Enemy):
         self.rect.center = (self.x, self.y)
         
     def update(self):
+        """
+        Atualiza a posição do professor e verifica se ele atingiu a parte inferior da tela para removê-lo.
+        """
         if self.rect.y >= self.height:
             self.kill()
 
-    def throw_evaluation(self):
-        pass
-    
-    def throw_chalk(self):
-        pass
+if __name__ == "main":
+    # Inicialização do Pygame
+    py.init()
+
+    # Definição de variáveis
+    SCREEN_WIDTH = 800
+    SCREEN_HEIGHT = 600
+    FPS = 60
+
+    # Configuração da tela
+    screen = py.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    py.display.set_caption("Professor Test")
+
+    # Carregando imagens necessárias (substitua pelo caminho real do arquivo)
+    enemy_image = py.Surface((50, 50))
+
+    # Criando instância do Professor
+    professor = Professor(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, enemy_image, SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    # Configuração do relógio
+    clock = py.time.Clock()
+
+    # Loop principal
+    running = True
+    while running:
+        for event in py.event.get():
+            if event.type == QUIT:
+                running = False
+
+        # Atualizando o professor
+        professor.update()
+
+        # Desenhando na tela
+        screen.fill((255, 255, 255))
+        professor.draw(screen)
+
+        # Atualizando a tela
+        py.display.flip()
+
+        # Limitando a taxa de quadros
+        clock.tick(FPS)
+
+    # Finalizando o Pygame
+    py.quit()
