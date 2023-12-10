@@ -78,7 +78,7 @@ class Bat():
         #Criando player
         sprite_player = sprites.SpriteSheet()
         sprite_player = sprite_player.get_image(player_idle, 2000, 1890, 0.4)
-        fofo = char.MainPlayer(player_start_x, player_start_y , sprite_player, self.width, self.height, platform_group, GRAVITY)
+        fofo = char.MainPlayer(50, 50 , sprite_player, self.width, self.height, platform_group, GRAVITY)
 
         #loop principal do jogo
         while game_on:

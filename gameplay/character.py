@@ -24,13 +24,13 @@ class MainPlayer(Character):
         self.width = SCREEN_WIDTH
         self.height = SCREEN_HEIGHT
         self.platform_group = platform_group
-        self.GRAVITY = GRAVITY
+        self.GRAVITY = -0.03
         self.isjumping = False
 
         #variáveis importantes para o player
         self.flip = False
         self.lateral_speed = 10
-        self.y_speed = 3
+        self.y_speed = -3
     
     def kill(self):
         death_fx.play()
@@ -44,29 +44,31 @@ class MainPlayer(Character):
         if (key[py.K_LEFT] or key[py.K_a]) and self.rect.left > 0:
             dx -= self.lateral_speed
             self.flip = True
-        if (key[py.K_RIGHT] or key[py.K_d]) and self.rect.right + self.lateral_speed <= self.width:
+        if (key[py.K_RIGHT] or key[py.K_d]) and (self.rect.right + self.lateral_speed) <= self.width:
             dx += self.lateral_speed
             self.flip = False
+        
+        # Mecanismo de pulo
+        if not self.isjumping and (key[py.K_UP] or key[py.K_w]) and (self.rect.top < self.height):
+            self.isjumping = True
+            jump_fx.play() 
+            self.y_speed = -1
+        elif self.isjumping:
+            self.y_speed -= self.GRAVITY
+            dy += self.y_speed
 
-        self.y_speed += self.GRAVITY
-        dy += self.y_speed
-
-        #update rectangle position 
+        for platform in self.platform_group:
+            if platform.rect.colliderect(self.rect.x, self.rect.y + dy, 800, 756):
+                if self.rect.bottom < platform.rect.centery:
+                    if self.y_speed > 0:
+                        self.rect.bottom = platform.rect.top
+                        dy = 0
+                        self.y_speed = -3
+                
+        #update rectangle position
         self.rect.x += dx 
         self.rect.y += dy   
-            
         
-        # Detecção de colisão
-        for plataforma in self.platform_group:    
-            if py.sprite.collide_rect(self, plataforma) and self.y_speed >= 0:
-                self.y = plataforma.rect.top
-                self.isjumping = False
-                self.y_speed = 0
-            else:
-                self.isjumping = True
-
-        # Atualizando a posição do jogador
-        self.rect.center = (self.x, self.y)
 
     def draw(self, screen):
 
