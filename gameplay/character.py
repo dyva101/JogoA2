@@ -178,6 +178,60 @@ class MainPlayer(Character):
     def update(self):
         pass
 
+#driver code para desenvolvimento da classe MainPlayer
+if __name__ == "main":
+    # Inicialização do Pygame
+    py.init()
+
+    # Definição de variáveis
+    SCREEN_WIDTH = 800
+    SCREEN_HEIGHT = 600
+    FPS = 60
+
+    # Configuração da tela
+    screen = py.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    py.display.set_caption("MainPlayer Test")
+
+    # Imagens e Sons
+    player_image = py.Surface((50, 50))  
+    death_sound = py.mixer.Sound("assets\deathsound.mp3")
+
+    # Criando instância do MainPlayer
+    main_player = MainPlayer(SCREEN_WIDTH // 2, 0, player_image, SCREEN_WIDTH, SCREEN_HEIGHT, [], 0.025)
+
+    clock = py.time.Clock()
+
+    # Loop principal
+    running = True
+    while running:
+        for event in py.event.get():
+            if event.type == QUIT:
+                running = False
+
+        # Atualizando o jogador
+        main_player.move([], [])  # Passando grupos vazios para evitar erros nos métodos de detecção de colisão
+        main_player.update()
+
+        # Desenhando na tela
+        screen.fill((255, 255, 255))  # Preenchendo o fundo com branco
+        main_player.draw(screen)
+
+        # Atualizando a tela
+        py.display.flip()
+
+        # Limitando a taxa de quadros
+        clock.tick(FPS)
+
+        # Verificando se o jogador atingiu o chão
+        if main_player.y >= SCREEN_HEIGHT:
+            main_player.kill(death_sound)
+            py.time.delay(2000)
+            running = False
+
+    # Finalizando o Pygame
+    py.quit()
+
+
 class Enemy(py.sprite.Sprite):  # Removendo a herança ABC e utilizando apenas Sprite
     """
     Classe para representar um inimigo no jogo.
@@ -237,4 +291,47 @@ class Professor(Enemy):
         if self.rect.y >= self.height:
             self.kill()
 
-    
+if __name__ == "main":
+    # Inicialização do Pygame
+    py.init()
+
+    # Definição de variáveis
+    SCREEN_WIDTH = 800
+    SCREEN_HEIGHT = 600
+    FPS = 60
+
+    # Configuração da tela
+    screen = py.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    py.display.set_caption("Professor Test")
+
+    # Carregando imagens necessárias (substitua pelo caminho real do arquivo)
+    enemy_image = py.Surface((50, 50))
+
+    # Criando instância do Professor
+    professor = Professor(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, enemy_image, SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    # Configuração do relógio
+    clock = py.time.Clock()
+
+    # Loop principal
+    running = True
+    while running:
+        for event in py.event.get():
+            if event.type == QUIT:
+                running = False
+
+        # Atualizando o professor
+        professor.update()
+
+        # Desenhando na tela
+        screen.fill((255, 255, 255))
+        professor.draw(screen)
+
+        # Atualizando a tela
+        py.display.flip()
+
+        # Limitando a taxa de quadros
+        clock.tick(FPS)
+
+    # Finalizando o Pygame
+    py.quit()
