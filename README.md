@@ -72,7 +72,7 @@
 
 ### Documentação
 
-  - A documentação está disponível no link <a href="youtube.com">DOCS</a>! Ela contém informações sobre os módulos e métodos que compõem o trabalho
+  - A documentação está disponível no link https://dyva101.github.io/JogoA2/ ! Ela contém informações sobre os módulos e métodos que compõem o trabalho
 
 ---
 
