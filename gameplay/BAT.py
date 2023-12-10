@@ -55,8 +55,8 @@ class Bat():
         platform_group = py.sprite.Group()
 
         def generate_new_platform(platform_group, SCREEN_WIDTH, SCREEN_HEIGHT, imagem_plataforma):
-            p_size = random.randint(70, 140)
-            p_x = random.randint(0, SCREEN_WIDTH - p_size)
+            p_size = random.randint(80, 150)
+            p_x = random.randint(int(SCREEN_WIDTH/4), int(SCREEN_WIDTH * 4/5))
             p_y = 0
 
             new_platform = plat.Plataforma(p_x, p_y, p_size, imagem_plataforma)
@@ -70,10 +70,10 @@ class Bat():
 
             if p % 2 == 0:
                 # Posiciona as plataformas mais à esquerda, mas ainda no centro
-                p_x = random.randint(int(self.width / 4), int(self.width / 2))
+                p_x = random.randint(int(self.width / 4), int(self.width / 2) - p_2dp)
             else:
                 # Posiciona as plataformas mais à direita, mas ainda no centro
-                p_x = random.randint(int(self.width / 2), int(self.width * 3 / 4))
+                p_x = random.randint(int(self.width / 2), int(self.width * 3 / 4) - p_2dp)
 
             # Gera coordenadas y aleatórias para as plataformas
             p_y = p * random.randint(int(self.height / plat.max_plataformas), int(self.height / plat.max_plataformas) + 10)
