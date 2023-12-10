@@ -1,3 +1,6 @@
+"""
+Tratamento dos sprites para o jogo
+"""
 import pygame as py
 
 class SpriteSheet():

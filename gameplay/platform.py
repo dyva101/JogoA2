@@ -1,3 +1,7 @@
+"""
+Tratamento das plataformas como sprites 
+"""
+
 import pygame
 import random
 import math
@@ -8,7 +12,20 @@ pygame.init()
 max_plataformas = 6
 
 class Plataforma(pygame.sprite.Sprite):
+    """Classe geradora das plataformas do jogo
+
+    Parameters:
+        
+    """
     def __init__(self, x, y, width, imagem_plataforma):
+        """Inicializa a classe Plataforma
+
+        Parameters:
+            x (int): coordenada-x 
+            y (int): coordenada-y
+            width (int): largura da plataforma
+            imagem_plataforma (png): png da plataforma
+        """
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.transform.scale(imagem_plataforma, (width, 40))
         self.rect = self.image.get_rect()

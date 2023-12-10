@@ -174,7 +174,7 @@ class Bat:
 
             plat.draw(screen, platform_group)
 
-            #Criando inimigos
+            # Criando inimigos
             if len(group_de_inimigos) == 0:
                 enemy_x = random.randint(80, SCREEN_WIDTH - 80)
                 enemy_y = random.randint(80, SCREEN_HEIGHT - 80)
@@ -183,11 +183,11 @@ class Bat:
 
             group_de_inimigos.update()
                  
-            #Atualizando inimigos
+            # Atualizando inimigos
             for inimigo in group_de_inimigos:
                 inimigo.rect.y += 0.5
 
-            #Criando copinhos
+            # Criando copinhos
             if len(expresso_group) == 0:
                 expresso_x = random.randint(100, SCREEN_WIDTH - 100)
                 expresso_y = random.randint(100, SCREEN_HEIGHT - 100)
@@ -196,11 +196,11 @@ class Bat:
 
             expresso_group.update()
                  
-            #Atualizando copinhos
+            # Atualizando copinhos
             for expresso in expresso_group:
                 expresso.rect.y += 0.5
 
-            #Desenhando o jogador
+            # Desenhando o jogador
             expresso_group.draw(screen)
             group_de_inimigos.draw(screen)
             fofo.draw(screen)
@@ -209,7 +209,7 @@ class Bat:
                 if event.type == py.QUIT:
                     game_on = False
             
-            #YOU WON
+            # YOU WON
             if current_time >= 24000:
                 menu.you_won(screen, menu_image, you_won_image, FPS, self.width, self.height, WHITE, BLUE)
                 
