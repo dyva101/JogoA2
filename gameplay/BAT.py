@@ -56,13 +56,15 @@ class Bat:
         jump_fx = py.mixer.Sound("assets\\jumpland44100.mp3")
         death_fx = py.mixer.Sound("assets\\deathsound.mp3")
 
-        # Carregando imagens necessárias
-        player_idle = py.image.load("assets\\calunio.png").convert_alpha()
-        imagem_plataforma = py.image.load("assets\\plataforma.png")
-        bkgd = py.image.load("assets\\imagem_final.jpg").convert()
-
-        # Geração de Plataformas
+        #Carregando imagens necessárias
+        player_idle = py.image.load("assets\calunio.png").convert_alpha()
+        enemy_idle = py.image.load(r"assets\vilao.png").convert_alpha()
+        imagem_plataforma = py.image.load("assets\plataforma.png")
+        bkgd = py.image.load("assets\imagem_final.jpg").convert()
+        
+        #Geração de Plataformas
         platform_group = py.sprite.Group()
+        group_de_inimigos = py.sprite.Group()
 
         def generate_new_platform(platform_group, SCREEN_WIDTH, SCREEN_HEIGHT, imagem_plataforma):
             """
@@ -79,6 +81,8 @@ class Bat:
             """
             p_size = random.randint(70, 140)
             p_x = random.randint(0, SCREEN_WIDTH - p_size)
+            p_size = random.randint(80, 150)
+            p_x = random.randint(int(SCREEN_WIDTH/4), int(SCREEN_WIDTH * 4/5))
             p_y = 0
 
             new_platform = plat.Plataforma(p_x, p_y, p_size, imagem_plataforma)
@@ -92,10 +96,10 @@ class Bat:
 
             if p % 2 == 0:
                 # Posiciona as plataformas mais à esquerda, mas ainda no centro
-                p_x = random.randint(int(self.width / 4), int(self.width / 2))
+                p_x = random.randint(int(self.width / 4), int(self.width / 2) - p_2dp)
             else:
                 # Posiciona as plataformas mais à direita, mas ainda no centro
-                p_x = random.randint(int(self.width / 2), int(self.width * 3 / 4))
+                p_x = random.randint(int(self.width / 2), int(self.width * 3 / 4) - p_2dp)
 
             # Gera coordenadas y aleatórias para as plataformas
             p_y = p * random.randint(int(self.height / plat.max_plataformas), int(self.height / plat.max_plataformas) + 10)
@@ -117,10 +121,15 @@ class Bat:
         sprite_player = sprite_player.get_image(player_idle, 2000, 1890, 0.4)
         fofo = char.MainPlayer(player_start_x, player_start_y, sprite_player, self.width, self.height, platform_group, GRAVITY)
 
-        # Loop principal do jogo
-        while game_on:
-            clock.tick(60)
+        #Criando inimigo
+        sprite_enemy = sprites.SpriteSheet()
+        sprite_enemy = sprite_enemy.get_image(enemy_idle, 1600, 1600, 0.09)
 
+        #loop principal do jogo
+        while game_on:
+            clock.tick(60) 
+
+            
             if fofo.rect.bottom > SCREEN_HEIGHT:
                 fofo.kill(death_fx)
                 game_on = False
@@ -141,8 +150,33 @@ class Bat:
                 last_update = current_time
 
             plat.draw(screen, platform_group)
+            
+            #Atualizando inimigos
+            for inimigo in group_de_inimigos:
+                inimigo.rect.y += 0.5
 
-            # Desenhando o jogador
+            #Desenhando inimigos periodicamente
+            if current_time - last_update >= 1000:
+                altura_do_inimigo = 144
+                enemy_image = sprite_enemy
+                p = random.randint(0, len(platform_group) - 1)
+                for plataforma in platform_group:
+                    if p == 0:
+                        break
+                    p == 0
+                    # Ajuste as coordenadas y para posicionar os inimigos sobre as plataformas
+                    enemy_x = plataforma.rect.centerx  # Define a coordenada x igual ao centro da plataforma
+                    enemy_y = plataforma.rect.top - altura_do_inimigo  # Define a coordenada y acima da plataforma
+                    
+                    # Crie o inimigo usando as coordenadas definidas
+                    novo_inimigo = char.Professor(enemy_x, enemy_y, enemy_image)
+                    group_de_inimigos.add(novo_inimigo)
+
+                last_update = current_time
+
+            char.draw(screen, group_de_inimigos)
+
+            #Desenhando o jogador
             fofo.draw(screen)
 
             for event in py.event.get():
