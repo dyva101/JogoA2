@@ -89,8 +89,8 @@ class MainPlayer(Character):
         screen = py.display.set_mode((self.width, self.height))
 
         # Game Over (variáveis)
-        game_over_image = py.image.load("assets\menu_image.png").convert_alpha()
-        title_image = py.image.load("assets\game_over_image.png").convert_alpha()
+        game_over_image = py.image.load("assets\\menu_image.png").convert_alpha()
+        title_image = py.image.load("assets\\game_over_image.png").convert_alpha()
         game_over_image = py.transform.scale(game_over_image, (self.width, self.height))
         title_image = py.transform.scale(title_image, (self.width, 200))
         FPS = 60
@@ -129,7 +129,6 @@ class MainPlayer(Character):
         if self.isjumping:
             self.y += self.y_speed
             self.y_speed += self.GRAVITY
-            print(self.y_speed)
         
         # Detector de colisão com inimigos
         for inimigo in group_de_inimigos:
@@ -194,7 +193,7 @@ if __name__ == "main":
 
     # Imagens e Sons
     player_image = py.Surface((50, 50))  
-    death_sound = py.mixer.Sound("assets\deathsound.mp3")
+    death_sound = py.mixer.Sound("assets\\deathsound.mp3")
 
     # Criando instância do MainPlayer
     main_player = MainPlayer(SCREEN_WIDTH // 2, 0, player_image, SCREEN_WIDTH, SCREEN_HEIGHT, [], 0.025)
