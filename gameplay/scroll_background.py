@@ -1,5 +1,17 @@
 import math
 class ScrollBackground():
+    """
+    Classe para gerenciar o movimento de fundo (scrolling) na tela.
+
+    Attributes:
+    - SCREEN_HEIGHT (int): Altura da tela.
+    - screen: Tela onde o fundo será desenhado.
+    - scroll (int): Posição de rolagem do fundo.
+    - scroll_speed (int): Velocidade de rolagem do fundo.
+
+    Methods:
+    - scroll_bkgd(): Realiza o movimento de rolagem do fundo na tela.
+    """
     def __init__(self, SCREEN_HEIGHT, screen, scroll, scroll_speed, bkgd):
         self.SCREEN_HEIGHT = SCREEN_HEIGHT
         self.screen = screen
@@ -8,6 +20,12 @@ class ScrollBackground():
         self.bkgd = bkgd
 
     def scroll_bkgd(self):
+        """
+        Realiza o movimento de rolagem do fundo na tela.
+
+        Returns:
+        - int: Nova posição de rolagem do fundo.
+        """
 
         # Fundo em movimento
         height = self.bkgd.get_height()

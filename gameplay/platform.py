@@ -17,6 +17,13 @@ class Plataforma(pygame.sprite.Sprite):
         self.imagem_plataforma = imagem_plataforma
 
 def draw(screen, platform_group):
+    """
+    Desenha as plataformas na tela.
+
+    Parameters:
+    - screen: Tela onde as plataformas serão desenhadas.
+    - platform_group (pygame.sprite.Group): Grupo de plataformas.
+    """
     platform_group.draw(screen)
     for platform in platform_group:
         pygame.draw.rect(screen, (255, 0, 0), platform.rect, 2)

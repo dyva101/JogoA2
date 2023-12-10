@@ -109,12 +109,29 @@ class Enemy(ABC):
         
 class professor(Enemy):
     def __init__(self, x, y, enemy_img):
+        """
+        Inicializa a instância da classe professor.
+
+        Parameters:
+        - x (int): Posição horizontal inicial.
+        - y (int): Posição vertical inicial.
+        - enemy_img: Imagem do professor.
+        """
         super().__init__(x, y, enemy_img)
         self.speed = 5
         self.health = 100
 
     def throw_evaluation(self):
+        """
+        Método para atirar uma avaliação (ainda não implementado).
+        """
         pass
     
     def throw_chalk(self):
+        """
+        Método para atirar giz.
+
+        Returns:
+        - tuple: Uma tupla representando a posição inicial do giz.
+        """
         pass
