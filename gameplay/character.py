@@ -33,8 +33,11 @@ class MainPlayer(Character):
         self.lateral_speed = 10
         self.y_speed = -3
     
-    def kill(self):
+    def kill(self, death_fx):
+        py.mixer.music.set_volume(2)
         death_fx.play()
+        py.time.delay(1000)
+        py.quit()
         
     def move(self):
 
@@ -69,7 +72,7 @@ class MainPlayer(Character):
             if py.sprite.collide_rect(self, plataforma):
                 pass
                 
-            if py.sprite.collide_rect(self, plataforma) and self.y_speed >= 0:
+            if py.sprite.collide_rect(self, plataforma) and self.y_speed > 0:
                 self.y = plataforma.rect.top
                 self.isjumping = False
                 self.y_speed = 0

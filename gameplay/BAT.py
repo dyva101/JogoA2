@@ -30,14 +30,9 @@ class Bat():
         SCREEN_HEIGHT = self.height
         last_update = py.time.get_ticks()
         clock = py.time.Clock() # FPS
-        animation_cooldonw = 500
-        isjumping = False
-        time_counting = 0
         game_on = True
         scroll = 0
         GRAVITY = 0.03
-        action = 0
-        frame = 0
 
         # Criando uma tela
         screen = py.display.set_mode((self.width, self.height))
@@ -46,6 +41,7 @@ class Bat():
         #Sonoplastia
         py.mixer.init()
         py.mixer.music.load("assets\TrilhaSonora.mp3")
+        py.mixer.music.set_volume(0.7)
         py.mixer.music.play(-1)
         jump_fx = py.mixer.Sound("assets\jumpland44100.mp3")
         death_fx = py.mixer.Sound("assets\deathsound.mp3")
@@ -70,34 +66,41 @@ class Bat():
 
         # Plataformas temporária
         for p in range(plat.max_plataformas):
-            p_2dp = random.randint(80, 150) 
+            p_2dp = random.randint(80, 150)
 
-            if p%2 == 0:
-                p_x = random.randint(p_2dp, (self.width)/2 - p_2dp)
+            if p % 2 == 0:
+                # Posiciona as plataformas mais à esquerda, mas ainda no centro
+                p_x = random.randint(int(self.width / 4), int(self.width / 2))
             else:
-                p_x = random.randint(self.width/2 + p_2dp, self.width - p_2dp)
+                # Posiciona as plataformas mais à direita, mas ainda no centro
+                p_x = random.randint(int(self.width / 2), int(self.width * 3 / 4))
+
+            # Gera coordenadas y aleatórias para as plataformas
+            p_y = p * random.randint(int(self.height / plat.max_plataformas), int(self.height / plat.max_plataformas) + 10)
             
-            p_y = p * random.randint(int(self.height/ plat.max_plataformas), int(self.height/plat.max_plataformas) + 10)
+            # Cria a plataforma com as coordenadas geradas
             plataforma_1 = plat.Plataforma(p_x, p_y, p_2dp, imagem_plataforma)
             platform_group.add(plataforma_1)
             
         # Plataforma Inicial
-        start_platform_x = 20
-        start_platform_y = self.height - 20
+        start_platform_x = 10
+        start_platform_y = self.height - 200
         start_platform = plat.Plataforma(start_platform_x, start_platform_y, 80, imagem_plataforma)
         platform_group.add(start_platform)
+        player_start_x = start_platform.rect.centerx - 40
+        player_start_y = start_platform.rect.top - 80
 
         #Criando player
         sprite_player = sprites.SpriteSheet()
         sprite_player = sprite_player.get_image(player_idle, 2000, 1890, 0.4)
-        fofo = char.MainPlayer(50, 50 , sprite_player, self.width, self.height, platform_group, GRAVITY)
+        fofo = char.MainPlayer(player_start_x, player_start_y, sprite_player, self.width, self.height, platform_group, GRAVITY)
 
         #loop principal do jogo
         while game_on:
             clock.tick(60) 
             
             if fofo.rect.bottom > SCREEN_HEIGHT:
-                fofo.kill()
+                fofo.kill(death_fx)
                 game_on = False
             
             else:
